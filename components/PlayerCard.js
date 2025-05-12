@@ -1,47 +1,30 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import globalStyles from '../styles/globalStyles';
+import brainIcon from '../assets/icons/brain.png';
 
-const PlayerCard = ({ player, onRemove }) => {
+const PlayerCard = ({ player, onRemove, highlighted }) => {
   return (
-    <View style={styles.playerCard}>
-      <View style={styles.playerHeader}>
-        <Text style={styles.name}>{player.name}</Text>
+    <View
+      style={[
+        globalStyles.playerCard,
+        highlighted && globalStyles.playerCardGlow,
+      ]}
+    >
+      <View style={globalStyles.playerHeader}>
+        <Text style={globalStyles.name}>{player.name}</Text>
         {onRemove && (
           <TouchableOpacity onPress={onRemove}>
-            <Text style={styles.remove}>✕</Text>
+            <Text style={globalStyles.remove}>✕</Text>
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.score}>Brains: {player.brains}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+        <Image source={brainIcon} style={{ width: 20, height: 20, marginRight: 6 }} />
+        <Text style={globalStyles.score}>{player.brains}</Text>
+      </View>
     </View>
   );
 };
 
 export default PlayerCard;
-
-const styles = StyleSheet.create({
-  playerCard: {
-    backgroundColor: '#1f1f1f',
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 10,
-  },
-  playerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  name: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  remove: {
-    color: '#ff4d4d',
-    fontSize: 20,
-    paddingHorizontal: 8,
-  },
-  score: {
-    color: '#ccc',
-    marginTop: 8,
-  },
-});

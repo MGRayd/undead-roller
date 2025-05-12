@@ -1,67 +1,65 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import { Audio } from 'expo-av';
+import * as Animatable from 'react-native-animatable';
+import globalStyles from '../styles/globalStyles';
+
+import zombieDiceImg from '../assets/images/zombie_dice.png';
+import titleBannerImg from '../assets/images/title_banner.png';
+import zd1Img from '../assets/images/btn_zd1.png';
+import zd2Img from '../assets/images/btn_zd2.png';
 
 const HomeScreen = ({ navigation }) => {
+  const playZombieSound = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../assets/sounds/zombie_groan.mp3')
+      );
+      await sound.playAsync();
+    } catch (error) {
+      console.warn('Could not play zombie sound:', error);
+    }
+  };
+
+  const handleNavigation = async (mode) => {
+    await playZombieSound();
+    navigation.navigate('Game', { mode });
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Undead Roller</Text>
-      <Text style={styles.subtitle}>Choose Your Game Mode</Text>
+    <ScrollView contentContainerStyle={globalStyles.homeContainer}>
+      <Image source={titleBannerImg} style={globalStyles.heroImage} />
+      <Text style={globalStyles.subtitle}>Choose Your Game Mode</Text>
+      <Image source={zombieDiceImg} style={globalStyles.titleBanner} />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Game', { mode: 'classic' })}
-      >
-        <Text style={styles.buttonText}>Zombie Dice 1: Original</Text>
+      <TouchableOpacity onPress={() => handleNavigation('classic')}>
+        <Animatable.Image
+          animation="pulse"
+          iterationCount="infinite"
+          easing="ease-in-out"
+          duration={1500}
+          source={zd1Img}
+          style={globalStyles.buttonImage}
+        />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Game', { mode: 'doubleFeature' })}
-      >
-        <Text style={styles.buttonText}>Zombie Dice 2: Double Feature</Text>
+      <TouchableOpacity onPress={() => handleNavigation('doubleFeature')}>
+        <Animatable.Image
+          animation="pulse"
+          iterationCount="infinite"
+          easing="ease-in-out"
+          duration={1500}
+          source={zd2Img}
+          style={globalStyles.buttonImage}
+        />
       </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Game', { mode: 'schoolBus' })}
-      >
-        <Text style={styles.buttonText}>Zombie Dice 3: School Bus</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#121212',
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#ccc',
-    marginBottom: 40,
-  },
-  button: {
-    backgroundColor: '#333',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-});
